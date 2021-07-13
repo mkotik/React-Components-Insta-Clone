@@ -13,12 +13,14 @@ import Comments from "./components/Comments/Comments";
 // Import the dummyData
 import dummyData from "./dummy-data";
 import "./App.css";
-
+const liked = [];
 const App = () => {
   // Create a state called `posts` to hold the array of post objects, **initializing to dummyData**.
   // This state is the source of truth for the data inside the app. You won't be needing dummyData anymore.
   // To make the search bar work (which is stretch) we'd need another state to hold the search term.
+
   const [posts, setPosts] = useState(dummyData);
+  const [likedPosts, setLikedPosts] = useState(liked);
   const likePost = (postId) => {
     /*
       This function serves the purpose of increasing the number of likes by one, of the post with a given id.
@@ -31,6 +33,10 @@ const App = () => {
         - if the `id` of the post matches `postId`, return a new post object with the desired values (use the spread operator).
         - otherwise just return the post object unchanged.
      */
+    if (!liked.includes(postId)) liked.push(postId);
+    setLikedPosts(liked);
+    console.log(`likedPosts: ${likedPosts}`);
+
     setPosts(
       posts.map((post) => {
         if (post.id === postId) {
@@ -48,9 +54,8 @@ const App = () => {
   return (
     <div className="App">
       {/* Add SearchBar and Posts here to render them */}
-      <SearchBar />
+      <SearchBar posts={posts} setPosts={setPosts} />
       <Posts likePost={likePost} posts={posts} />
-      <Comments comments={posts.map((post) => post.comments)} />
       {/* Check the implementation of each component, to see what props they require, if any! */}
     </div>
   );
